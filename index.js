@@ -1,3 +1,23 @@
+const rockButton = document.querySelector("#rock");
+const paperButton = document.querySelector("#paper");
+const scissorsButton = document.querySelector("#scissors");
+const restartButton = document.querySelector("#restart");
+const divPlayerSelection = document.querySelector("#player-selection");
+const divComputerSelection = document.querySelector("#computer-selection");
+const divResult = document.querySelector("#result");
+const divFinalResult = document.querySelector("#final-result");
+
+rockButton.addEventListener('click', (e) => playGame(e.target.id));
+paperButton.addEventListener('click', (e) => playGame(e.target.id));
+scissorsButton.addEventListener('click', (e) => playGame(e.target.id));
+restartButton.addEventListener('click', () => {
+    [playerPoints, computerPoints] = [0,0]
+    divComputerSelection.textContent = "";
+    divFinalResult.textContent = "";
+    divPlayerSelection.textContent = "";
+    divResult.textContent = "";
+});
+
 const selections = ["rock", "paper", "scissors"];
 const results = [[0, -1, 1], [1, 0, -1], [-1, 1, 0]];
 
@@ -23,7 +43,7 @@ const playRound = (playerChoice, computerChoice) => {
                 gameResult = `You lost! ${ computerChoice } beats ${ playerChoice }`;
                 break;
         }
-        console.log(gameResult);
+        divResult.textContent = gameResult;
         return result;
     }
     catch (error) {
@@ -33,27 +53,38 @@ const playRound = (playerChoice, computerChoice) => {
     }
 }
 
-const playGame = () => {
-    let winner = 0;
-    for (let i = 0; i < 5; i++){
-        let result = 0;
-        console.log(`Round: ${ i + 1 }`);
-        do {
-            const playerChoice = prompt("Rock, Paper, Scissors, Shoot!");
-            console.log(`Your choice: ${ playerChoice }`);
-            const computerChoice = getComputerChoice();
-            console.log(`Computer choice: ${ computerChoice }`);
-            result = playRound(playerChoice, computerChoice);
-        } while (result == 2);
-        winner += result;
-    }
-    if (winner > 0) {
-        return "You won!";
-    } else if (winner < 0) {
-        return "You loose!";
-    } else {
-        return "It's a draw";
+let playerPoints = 0;
+let computerPoints = 0;
+
+const playGame = (playerChoice) => {
+    if (playerPoints < 5 && computerPoints < 5)
+    {
+        let winner = 0;
+        // for (let i = 0; i < 5; i++){
+        //     let result = 0;
+        //     console.log(`Round: ${ i + 1 }`);
+        //     do {
+        //         const playerChoice = prompt("Rock, Paper, Scissors, Shoot!");
+        //         console.log(`Your choice: ${ playerChoice }`);
+        //         const computerChoice = getComputerChoice();
+        //         console.log(`Computer choice: ${ computerChoice }`);
+        //         result = playRound(playerChoice, computerChoice);
+        //     } while (result == 2);
+        //     winner += result;
+        // }
+        divPlayerSelection.textContent = `Your choice: ${ playerChoice }`;
+        const computerChoice = getComputerChoice();
+        divComputerSelection.textContent = `Computer choice: ${ playerChoice }`;
+        winner = playRound(playerChoice, computerChoice);
+        if (winner > 0) {
+            playerPoints++;
+        } else if (winner < 0) {
+            computerPoints++;
+        }
+        if(playerPoints >= 5) divFinalResult.textContent = "You won! You reached 5 points";
+        if(computerPoints >= 5) divFinalResult.textContent = "You loose! Computer reached 5 points";
+
     }
 }
 
-console.log(playGame());
+// console.log(playGame());
